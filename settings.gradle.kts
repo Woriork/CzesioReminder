@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CzesioReminder"
+rootProject.name = "Grades"
 include(":app")
- 
