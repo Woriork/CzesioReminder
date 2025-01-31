@@ -21,6 +21,12 @@ import androidx.navigation.NavHostController
 import com.example.czesioreminder.viewmodel.TaskViewModel
 import java.util.*
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
+import com.example.grades.R
 
 @Composable
 fun TaskDetailScreen(taskId: Int, navController: NavHostController) {
@@ -51,41 +57,65 @@ fun TaskDetailScreen(taskId: Int, navController: NavHostController) {
     }
 
     Scaffold { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(Color(0xFFB0B59E))
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = task!!.title,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFF565547))
-                    .padding(8.dp),
-                color = Color.White
+            // Zdjęcie jako tło
+            Image(
+                painter = painterResource(id = R.drawable.background_image), // Dodaj swoje zdjęcie do folderu res/drawable
+                contentDescription = "Tło",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
 
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Kategoria: ${task!!.category}", fontSize = 16.sp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                Text(
+                    text = task!!.title,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF565547))
+                        .padding(8.dp),
+                    color = Color.White
+                )
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Data: $selectedDate", fontSize = 16.sp)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = {
-                        showDatePicker(context) { newDate -> selectedDate = newDate }
-                    }) {
-                        Text("Zmień")
+                // Dodanie białego, przezroczystego prostokąta pod tekstem "Treść", "Kategoria", "Data" i "Status"
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xD0FFFFFF)) // 0xD0FFFFFF to biały kolor z 80% przezroczystością
+                        .padding(16.dp)
+                ) {
+                    Column {
+                        Text("Kategoria: ${task!!.category}", fontSize = 16.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Data: $selectedDate", fontSize = 16.sp)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(onClick = {
+                                showDatePicker(context) { newDate -> selectedDate = newDate }
+                            }) {
+                                Text("Zmień")
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text("Treść: ${task!!.description}", fontSize = 16.sp)
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text("Status", fontWeight = FontWeight.Bold)
                     }
                 }
 
                 Spacer(Modifier.height(16.dp))
-                Text("Treść: ${task!!.description}", fontSize = 16.sp)
-
-                Spacer(Modifier.height(16.dp))
-                Text("Status", fontWeight = FontWeight.Bold)
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

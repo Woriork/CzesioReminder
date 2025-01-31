@@ -20,6 +20,7 @@ import androidx.compose.ui.input.key.Key.Companion.Calendar
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.compose.ui.graphics.Brush
 
 @Composable
 fun AddTask(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -54,47 +55,56 @@ fun AddTask(navController: NavHostController, modifier: Modifier = Modifier) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         content = { innerPadding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
-                    .background(Color(0xFFB0B59E))
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(Color(0xFFB0B59E), Color(0xFF565547))
+                        )
+                    )
             ) {
-                Text(
-                    text = "Dodaj nowe zadanie",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFF565547))
-                        .padding(8.dp),
-                    color = Color.White
-                )
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    Text(
+                        text = "Dodaj nowe zadanie",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFF565547))
+                            .padding(8.dp),
+                        color = Color.White
+                    )
 
-                Column(modifier = Modifier.padding(16.dp)) {
-                    OutlinedTextField(
-                        value = title,
-                        onValueChange = { title = it },
-                        label = { Text("Tytuł") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    OutlinedTextField(
-                        value = description,
-                        onValueChange = { description = it },
-                        label = { Text("Opis") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text("Kategoria: $category", fontSize = 16.sp)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("Data: $date", fontSize = 16.sp)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Button(onClick = {
-                            showDatePicker(context) { newDate -> date = newDate }
-                        }) {
-                            Text("Zmień datę")
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        OutlinedTextField(
+                            value = title,
+                            onValueChange = { title = it },
+                            label = { Text("Tytuł") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        OutlinedTextField(
+                            value = description,
+                            onValueChange = { description = it },
+                            label = { Text("Opis") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text("Kategoria: $category", fontSize = 16.sp)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Data: $date", fontSize = 16.sp)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(onClick = {
+                                showDatePicker(context) { newDate -> date = newDate }
+                            }) {
+                                Text("Zmień datę")
+                            }
                         }
                     }
                 }
