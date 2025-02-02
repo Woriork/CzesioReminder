@@ -27,16 +27,19 @@ fun TaskList(navController: NavHostController) {
     val tasks by viewModel.tasksState.collectAsState()
 
     var showCompleted by remember { mutableStateOf(false) }
-    var sortByDate by remember { mutableStateOf(true) }
+    var sortByOption by remember { mutableStateOf("Data") }
+    var expanded by remember { mutableStateOf(false) }
 
-    val filteredTasks = tasks.filter { task ->
-        if (showCompleted) task.isCompleted else true
-    }.sortedWith { task1, task2 ->
-        when {
-            sortByDate -> task1.date.compareTo(task2.date)
-            else -> task1.title.compareTo(task2.title)
-        }
-    }
+    val filteredTasks = tasks
+        .filter { task -> if (showCompleted) task.isCompleted else true }
+        .sortedWith(compareBy<Task> {
+            when (sortByOption) {
+                "Data" -> it.date
+                "Nazwa" -> it.title
+                "Kategoria" -> it.category
+                else -> it.date
+            }
+        })
 
     Scaffold(
         floatingActionButton = {
@@ -63,6 +66,39 @@ fun TaskList(navController: NavHostController) {
                 color = Color.White
             )
 
+            // Sortowanie i filtr
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                Button(onClick = { showCompleted = !showCompleted }) {
+                    Text(if (showCompleted) "Pokaż wszystkie" else "Pokaż ukończone")
+                }
+
+                Box {
+                    Button(onClick = { expanded = true }) {
+                        Text("Sortuj: $sortByOption")
+                    }
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        listOf("Data", "Nazwa", "Kategoria").forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(option) },
+                                onClick = {
+                                    sortByOption = option
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
             LazyColumn(modifier = Modifier.padding(16.dp)) {
                 items(filteredTasks) { task ->
                     TaskItem(
@@ -74,26 +110,10 @@ fun TaskList(navController: NavHostController) {
                     )
                 }
             }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                Button(onClick = { showCompleted = !showCompleted }) {
-                    Text(if (showCompleted) "Pokaż wszystkie" else "Pokaż ukończone")
-                }
-                Button(onClick = { sortByDate = !sortByDate }) {
-                    Text(if (sortByDate) "Sortuj po nazwie" else "Sortuj po dacie")
-                }
-                Button(onClick = { navController.navigate("addTask") }) {
-                    Text("Nowy Task")
-                }
-            }
         }
     }
 }
+
 
 @Composable
 fun TaskItem(task: Task, onTaskClick: () -> Unit, onCheckedChange: (Boolean) -> Unit) {
