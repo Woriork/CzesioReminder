@@ -14,7 +14,10 @@ import androidx.navigation.navArgument
 @Composable
 fun Navigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = "taskList") {
+    NavHost(navController, startDestination = "startScreen") {
+        composable("startScreen") {
+            StartScreen(navController)
+        }
         composable("taskList") {
             TaskList(navController)
         }

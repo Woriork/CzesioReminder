@@ -2,7 +2,6 @@ package com.example.czesioreminder.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.czesioreminder.data.Task
 import com.example.czesioreminder.data.TaskDatabase
@@ -59,5 +58,12 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
             _taskState.value = task
         }
     }
-}
 
+    fun getTasksByCategory(category: String) {
+        viewModelScope.launch {
+            repository.getTasksByCategory(category).collect { tasks ->
+                _tasksState.value = tasks
+            }
+        }
+    }
+}

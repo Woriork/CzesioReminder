@@ -8,4 +8,5 @@ class TaskRepository(private val taskDao: TaskDao) {
     suspend fun update(task: Task) = taskDao.update(task)
     suspend fun delete(task: Task) = taskDao.delete(task)
     suspend fun getTaskById(id: Int) = taskDao.getTaskById(id)
+    fun getTasksByCategory(category: String): Flow<List<Task>> = taskDao.getTasksByCategory(category) // Dodaj nową metodę
 }
