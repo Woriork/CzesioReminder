@@ -68,5 +68,4 @@ dependencies {
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.compiler)
     implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.0")
-
 }

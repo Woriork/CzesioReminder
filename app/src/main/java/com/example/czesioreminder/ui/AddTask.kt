@@ -16,7 +16,6 @@ import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.Calendar
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -28,6 +27,11 @@ fun AddTask(navController: NavHostController, modifier: Modifier = Modifier) {
     var description by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("General") }
     var date by remember { mutableStateOf("2023-10-01") }
+    var newCategory by remember { mutableStateOf("") } // Dodane dla nowej kategorii
+    var expanded by remember { mutableStateOf(false) } // Dodane dla rozwijanej listy
+
+    // Lista dostępnych kategorii (można ją przechowywać w ViewModel)
+    val categories = remember { mutableStateListOf("General", "Work", "Home", "Shopping") }
 
     val context = LocalContext.current
     val viewModel: TaskViewModel = viewModel(
@@ -48,7 +52,6 @@ fun AddTask(navController: NavHostController, modifier: Modifier = Modifier) {
             calendar.get(java.util.Calendar.MONTH),
             calendar.get(java.util.Calendar.DAY_OF_MONTH)
         )
-
         datePicker.show()
     }
 
@@ -95,8 +98,56 @@ fun AddTask(navController: NavHostController, modifier: Modifier = Modifier) {
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Kategoria: $category", fontSize = 16.sp)
+
+                        // Rozwijana lista kategorii
+                        Box {
+                            Button(
+                                onClick = { expanded = true },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Kategoria: $category")
+                            }
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                categories.forEach { cat ->
+                                    DropdownMenuItem(
+                                        text = { Text(cat) },
+                                        onClick = {
+                                            category = cat
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
                         Spacer(modifier = Modifier.height(16.dp))
+
+                        // Dodawanie nowej kategorii
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            OutlinedTextField(
+                                value = newCategory,
+                                onValueChange = { newCategory = it },
+                                label = { Text("Nowa kategoria") },
+                                modifier = Modifier.weight(1f)
+                            )
+                            Button(
+                                onClick = {
+                                    if (newCategory.isNotBlank() && !categories.contains(newCategory)) {
+                                        categories.add(newCategory)
+                                        category = newCategory
+                                        newCategory = ""
+                                    }
+                                }
+                            ) {
+                                Text("Dodaj")
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text("Data: $date", fontSize = 16.sp)
                             Spacer(modifier = Modifier.width(8.dp))
