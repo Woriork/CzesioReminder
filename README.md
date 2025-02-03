@@ -4,7 +4,7 @@ CzesioReminder to aplikacja, która pomoże Ci zapanować nad wszystkimi zadania
 
 <img src="https://static.wikia.nocookie.net/bohaterowie/images/7/7d/Czesio_WlatcyMoch.PNG.png/revision/latest?cb=20221202213432&path-prefix=pl"/>
 
-<img src="https://raw.githubusercontent.com/Woriork/CzesioReminder/main/Czesiek.png" width="300" />
+<img src="https://raw.githubusercontent.com/Woriork/CzesioReminder/main/Czesiek.png"  />
 
 
 
